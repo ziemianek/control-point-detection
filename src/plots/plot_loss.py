@@ -1,21 +1,37 @@
 import matplotlib.pyplot as plt
-import os
+from src.config import TRAIN_LOSS_FILE_PATH, VALID_LOSS_FILE_PATH, OUTPUTS_DIR
 
-dir = "/Users/ziemian/Code/bt/paper"
-train_loss_filepath = f"{dir}/train_loss.txt"
-valid_loss_filepath = f"{dir}/val_loss.txt"
 loss_fig = "loss_plot.png"
-fig_size = (14,8)
+fig_size = (14, 8)
+
 
 def read_loss_values(file):
+    """
+    Read the content of a loss file.
+
+    Parameters:
+        file (str): Path to the loss file.
+
+    Returns:
+        List[str]: List containing lines from the loss file.
+    """
     try:
         with open(file, "r") as f:
             return f.readlines()
-    except:
+    except Exception:
         print(f"Couldn't read {file} content")
 
 
 def parse_loss_values(content):
+    """
+    Parse loss values from content.
+
+    Parameters:
+        content (List[str]): List containing lines of loss values.
+
+    Returns:
+        List[float]: List containing parsed loss values.
+    """
     loss = []
     for line in content:
         loss.append(line.split()[-1])
@@ -23,8 +39,8 @@ def parse_loss_values(content):
 
 
 if __name__ == "__main__":
-    train_loss = parse_loss_values(read_loss_values(train_loss_filepath))
-    valid_loss = parse_loss_values(read_loss_values(valid_loss_filepath))
+    train_loss = parse_loss_values(read_loss_values(TRAIN_LOSS_FILE_PATH))
+    valid_loss = parse_loss_values(read_loss_values(VALID_LOSS_FILE_PATH))
 
     # Generate a list of epochs (assuming one epoch per entry)
     epochs = list(range(1, len(train_loss) + 1))
@@ -42,7 +58,6 @@ if __name__ == "__main__":
     for i, txt in enumerate(valid_loss):
         plt.annotate(f'{txt:.4f}', (epochs[i], valid_loss[i]), textcoords="offset points", xytext=(0, -15), ha='center')
 
-
     plt.title('Wykres wartości funkcji straty dla zbiorów treningowego i walidacyjnego')
     plt.xlabel('Epoka')
     plt.ylabel('Wartości funkcji straty')
@@ -50,4 +65,4 @@ if __name__ == "__main__":
     plt.legend()  # Display legend
     plt.grid(True)
     # plt.show()
-    plt.savefig(f'{dir}/{loss_fig}')
+    plt.savefig(f'{OUTPUTS_DIR}/{loss_fig}')

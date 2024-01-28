@@ -19,7 +19,7 @@ def eval(net: Net) -> None:
     Returns:
         None
     """
-    net.load_model(net, f'{OUTPUTS_DIR}/{MODEL}')
+    net.load_model(f'{OUTPUTS_DIR}/{MODEL}')
 
     net.model.eval()
 

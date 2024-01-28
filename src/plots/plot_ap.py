@@ -1,55 +1,42 @@
 import matplotlib.pyplot as plt
-import numpy as np
-from src.metrics.metrics import *
+import json
+from src.metrics.metrics import calculate_average_precision, precision, recall
 from src.config import METRICS_FILE_PATH
-dir = "/Users/ziemian/Code/bt/paper"
-metrics_file = f"{dir}/values.txt"
+
 metrics_fig = "metrics_plot.png"
 
 # Load JSON content from a file
-with open(metrics_file, 'r') as file:
-    content = file.readlines()
+with open(METRICS_FILE_PATH, 'r') as file:
+    metrics_data = json.load(file)
 
-ious = [round(float(i), 1) for i in np.arange(0.0, 1.1, 0.1)]
 metrics = []
 
-for iou in ious:
-    values = []
-    for line in content:
-        if line.startswith(f'{iou}'):
-            values.append(line.split()[1])
+for iou, metrics_dict in metrics_data:
     iou = float(iou)
-    values[0] = int(values[0])
-    values[1] = int(values[1])
-    values[2] = int(values[2])
     metrics.append(
         {
             'iou': iou,
-            'tp': values[0],
-            'fp': values[1],
-            'fn': values[2],
-            'precision': round(precision(values[0], values[1]), 4),
-            'recall': round(recall(values[0], values[2]), 4),
+            'tp': metrics_dict['tp'],
+            'fp': metrics_dict['fp'],
+            'fn': metrics_dict['fn'],
+            'precision': round(precision(metrics_dict['tp'], metrics_dict['fp']), 4),
+            'recall': round(recall(metrics_dict['tp'], metrics_dict['fn']), 4),
         }
     )
 
-for iou in ious:
-    for entry in metrics:
-        print(entry) if entry['iou'] == iou else None
+for entry in metrics:
+    print(entry)
 
+precision_values = [entry['precision'] for entry in metrics]
+recall_values = sorted([entry['recall'] for entry in metrics])
 
-p = [entry['precision'] for entry in metrics]
-r = sorted([entry['recall'] for entry in metrics])
-
-
-# Plot the curve
 plt.figure(figsize=(14, 8))
-plt.plot(r, p, marker='o', linestyle='-', color='b')
+plt.plot(recall_values, precision_values, marker='o', linestyle='-', color='b')
 plt.xlabel('Recall')
 plt.ylabel('Precision')
-plt.title('Krzywa Precision-Recall')
+plt.title('Precision-Recall Curve')
 plt.grid(True)
-plt.savefig(f"{dir}/{metrics_fig}")
+plt.savefig(metrics_fig)
 
-average_precision = calculate_average_precision(p, r)
+average_precision = calculate_average_precision(precision_values, recall_values)
 print(f"Average Precision (AP): {average_precision}")

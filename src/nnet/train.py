@@ -1,7 +1,14 @@
 import time
 import torch
 import tqdm
-from src.config import OUTPUTS_DIR, NUM_EPOCHS, DEVICE, PATIENCE
+from src.config import (
+    OUTPUTS_DIR,
+    NUM_EPOCHS,
+    DEVICE,
+    PATIENCE,
+    TRAIN_LOSS_FILE_PATH,
+    VALID_LOSS_FILE_PATH
+)
 from src.common.utils import append_file
 from src.nnet.net import Net
 
@@ -20,9 +27,6 @@ def train(net: Net) -> None:
     valid_losses = []
     best_loss = float('inf')
     current_patience = 0
-
-    train_loss_filepath = f"{OUTPUTS_DIR}/train_loss.txt"
-    valid_loss_filepath = f"{OUTPUTS_DIR}/val_loss.txt"
 
     start_time = time.time()
     for epoch in range(NUM_EPOCHS):
@@ -47,7 +51,7 @@ def train(net: Net) -> None:
             net.optimizer.step()
 
         train_loss /= len(net.train_loader)
-        append_file(train_loss_filepath, f"epoch: {epoch + 1}, train_loss: {train_loss}")
+        append_file(TRAIN_LOSS_FILE_PATH, f"epoch: {epoch + 1}, train_loss: {train_loss}")
         train_losses.append(train_loss)
         print(f"Train loss for epoch {epoch + 1}: {train_loss}")
 
@@ -63,7 +67,7 @@ def train(net: Net) -> None:
             valid_loss += loss.item()
 
         valid_loss /= len(net.valid_loader)  # sum of loss for batch / num batches
-        append_file(valid_loss_filepath, f"epoch: {epoch + 1}, valid_loss: {valid_loss}")
+        append_file(VALID_LOSS_FILE_PATH, f"epoch: {epoch + 1}, valid_loss: {valid_loss}")
         valid_losses.append(valid_loss)
         print(f"Validation loss for epoch {epoch + 1}: {valid_loss}")
 

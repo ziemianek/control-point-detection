@@ -22,6 +22,8 @@ ANNOTATION_TEMPLATE_FILE_PATH = f"{TEMPLATES_DIR_PATH}/annotation_template.xml"
 OBJECT_TEMPLATE_FILE_PATH = f"{TEMPLATES_DIR_PATH}/object_template.xml"
 
 METRICS_FILE_PATH = f"{OUTPUTS_DIR}/metrics.json"
+TRAIN_LOSS_FILE_PATH = f"{OUTPUTS_DIR}/train_loss.txt"
+VALID_LOSS_FILE_PATH = f"{OUTPUTS_DIR}/val_loss.txt"
 
 TRAIN_DIR = f'{DATA_DIR_PATH}/train'
 TEST_DIR = f'{DATA_DIR_PATH}/test'

@@ -1,8 +1,14 @@
+""" This script was used only to visualize some of the data transformations and will not work in other cases"""
+
+
 import albumentations as A
 import cv2
 import os
 import glob
+import numpy as np
+import torch
 
+from src.config import ANNOTATIONS_DIR_PATH
 
 
 # Sample image path
@@ -63,22 +69,22 @@ if __name__ == "__main__":
 
         for j in image_annotations:
             if j == image_name:
-            annotated_boxes = []
-            tree = ET.parse(f'{ANNOTATIONS_DIR_PATH}/{j}.xml')
-            root = tree.getroot()
+                annotated_boxes = []
+                tree = ET.parse(f'{ANNOTATIONS_DIR_PATH}/{j}.xml')
+                root = tree.getroot()
 
-            # box coordinates for xml files are extracted and corrected for image size given
-            for member in root.findall('object'):
-                # xmin = left corner x-coordinates
-                xmin = int(member.find('bndbox').find('xmin').text)
-                # xmax = right corner x-coordinates
-                xmax = int(member.find('bndbox').find('xmax').text)
-                # ymin = left corner y-coordinates
-                ymin = int(member.find('bndbox').find('ymin').text)
-                # ymax = right corner y-coordinates
-                ymax = int(member.find('bndbox').find('ymax').text)
+                # box coordinates for xml files are extracted and corrected for image size given
+                for member in root.findall('object'):
+                    # xmin = left corner x-coordinates
+                    xmin = int(member.find('bndbox').find('xmin').text)
+                    # xmax = right corner x-coordinates
+                    xmax = int(member.find('bndbox').find('xmax').text)
+                    # ymin = left corner y-coordinates
+                    ymin = int(member.find('bndbox').find('ymin').text)
+                    # ymax = right corner y-coordinates
+                    ymax = int(member.find('bndbox').find('ymax').text)
 
-                annotated_boxes.append([xmin, ymin, xmax, ymax])
+                    annotated_boxes.append([xmin, ymin, xmax, ymax])
 
         image = cv2.imread(test_images[i])
         orig_image = image.copy()
