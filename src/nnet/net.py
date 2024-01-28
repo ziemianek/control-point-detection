@@ -1,4 +1,4 @@
-import torch.optim as optim
+import torch
 from torch.utils.data import DataLoader
 from torchvision.models.detection.faster_rcnn import (
     FastRCNNPredictor,
@@ -47,12 +47,20 @@ class Net:
         model.to(DEVICE)
 
         self.model = model
-        self.optimizer = optim.SGD(
-            self.model.parameters(),
-            lr=LEARNING_RATE,
-            momentum=MOMENTUM,
-            weight_decay=WEIGHT_DECAY
-        )
+        if MOMENTUM is not None:
+            optimizer = torch.optim.SGD(
+                model.parameters(),
+                lr=LEARNING_RATE,
+                momentum=MOMENTUM,
+                weight_decay=WEIGHT_DECAY
+            )
+        else:
+            optimizer = torch.optim.Adam(
+                model.parameters(),
+                lr=LEARNING_RATE,
+                weight_decay=WEIGHT_DECAY
+            )
+        self.optimizer = optimizer
 
 
     def create_data_loaders(self) -> None:

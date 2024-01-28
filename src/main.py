@@ -6,8 +6,15 @@ from src.nnet.eval import eval
 
 if __name__ == "__main__":
     net = Net()
-    net.create_model()
+
+    print("Creating the model...")
+    net.create_model(NUM_CLASSES)
+
+    print("Creating data loaders...")
     net.create_data_loaders()
 
+    print("Training the model...")
     train(net)
+
+    print("Evaluating the model...")
     eval(net)

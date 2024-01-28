@@ -1,4 +1,4 @@
-import src.settings as settings
+import src.config as settings
 from src.common.utils import (
     list_files_recursively,
     read_file_content,
@@ -7,7 +7,7 @@ from src.common.utils import (
     clear_directory,
     write_file
 )
-from src.photo import Photo
+from src.processing.photo import Photo
 
 
 class InvalidFormat(Exception):

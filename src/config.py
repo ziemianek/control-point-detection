@@ -3,6 +3,9 @@
 import torch
 
 
+# Best model saved for analysis
+MODEL = "model_12e.pth"
+
 # Paths
 PROJECT_DIR_PATH = "/Users/ziemian/Code/bt"      # for local development
 # PROJECT_DIR_PATH = "/content/Inzynierka"       # for google colab development

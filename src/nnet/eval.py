@@ -2,7 +2,7 @@ import json
 import numpy as np
 import torch
 import tqdm
-from src.config import DEVICE, OUTPUTS_DIR
+from src.config import DEVICE, OUTPUTS_DIR, MODEL
 from src.common.utils import format_bboxes
 from src.metrics.metrics import calculate_metrics
 from src.metrics.nms import nms
@@ -37,7 +37,7 @@ def eval(net: Net) -> None:
     Returns:
         None
     """
-    load_model(net, f'{OUTPUTS_DIR}/model_12e.pth')
+    load_model(net, f'{OUTPUTS_DIR}/{MODEL}')
 
     net.model.eval()
 

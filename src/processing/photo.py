@@ -1,10 +1,9 @@
-from pathlib import Path
 from PIL import Image
 from PIL.ExifTags import TAGS, GPSTAGS
 from dataclasses import dataclass
 from numpy import array_split
-from src.settings import PHOTOS_DIR_PATH
-from src.stamp import Stamp
+from src.config import PHOTOS_DIR_PATH
+from src.processing.stamp import Stamp
 
 
 @dataclass
