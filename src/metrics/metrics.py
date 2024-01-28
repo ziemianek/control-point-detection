@@ -58,3 +58,72 @@ def calculate_metrics(
         'FP': false_positives,
         'FN': false_negatives,
     }
+
+
+def precision(tp: int, fp: int) -> float:
+    """
+    Calculates precision given the number of true positives (TP) and false positives (FP).
+
+    Parameters:
+        tp (int): Number of true positives.
+        fp (int): Number of false positives.
+
+    Returns:
+        float: Precision value.
+    """
+    p = 0.0
+    try:
+        p = min(tp / (tp + fp), 1.0)
+    except ZeroDivisionError:
+        pass
+    return p
+
+
+def recall(tp: int, fn: int) -> float:
+    """
+    Calculates recall given the number of true positives (TP) and false negatives (FN).
+
+    Parameters:
+        tp (int): Number of true positives.
+        fn (int): Number of false negatives.
+
+    Returns:
+        float: Recall value.
+    """
+    r = 0.0
+    try:
+        r = min(tp / (tp + fn), 1.0)
+    except ZeroDivisionError:
+        pass
+    return r
+
+
+def calculate_average_precision(precision: List[float], recall: List[float]) -> float:
+    """
+    Calculates the average precision given precision and recall lists.
+
+    Parameters:
+        precision (List[float]): List of precision values.
+        recall (List[float]): List of recall values.
+
+    Returns:
+        float: Average precision value.
+    """
+    # Ensure precision and recall lists have the same length
+    assert len(precision) == len(recall), "Precision and recall lists must have the same length"
+
+    # Sort precision and recall in decreasing order of recall
+    sorted_indices = sorted(range(len(recall)), key=lambda i: recall[i], reverse=True)
+    precision = [precision[i] for i in sorted_indices]
+    recall = [recall[i] for i in sorted_indices]
+
+    # Initialize variables
+    area_under_curve = 0.0
+    prev_recall = 0.0
+
+    # Calculate area under the precision-recall curve using the trapezoidal rule
+    for i in range(len(precision)):
+        area_under_curve += (recall[i] - prev_recall) * precision[i]
+        prev_recall = recall[i]
+
+    return abs(area_under_curve)  # Ensure the result is non-negative
