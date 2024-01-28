@@ -1,5 +1,4 @@
 import time
-from typing import List
 import torch
 import tqdm
 from src.config import OUTPUTS_DIR, NUM_EPOCHS, DEVICE, PATIENCE
@@ -17,19 +16,19 @@ def train(net: Net) -> None:
     Returns:
         None
     """
-    train_losses: List[float] = []
-    valid_losses: List[float] = []
-    best_loss: float = float('inf')
-    current_patience: int = 0
+    train_losses = []
+    valid_losses = []
+    best_loss = float('inf')
+    current_patience = 0
 
-    train_loss_filepath: str = f"{OUTPUTS_DIR}/train_loss.txt"
-    valid_loss_filepath: str = f"{OUTPUTS_DIR}/val_loss.txt"
+    train_loss_filepath = f"{OUTPUTS_DIR}/train_loss.txt"
+    valid_loss_filepath = f"{OUTPUTS_DIR}/val_loss.txt"
 
-    start_time: float = time.time()
+    start_time = time.time()
     for epoch in range(NUM_EPOCHS):
         print(f"Epoch {epoch + 1}/{NUM_EPOCHS}")
-        train_loss: float = 0
-        valid_loss: float = 0
+        train_loss = 0
+        valid_loss = 0
 
         # train
         net.model.train()

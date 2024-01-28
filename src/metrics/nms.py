@@ -22,9 +22,9 @@ def nms(
 
     # Extracting boxes and scores from the input predictions
     for p in preds:
-        boxes.append(p[2:])
+        print(p)
+        boxes.append(p[3:])
         scores.append(p[1])
-
     boxes = torch.tensor(boxes, dtype=torch.float)
     scores = torch.tensor(scores, dtype=torch.float)
 

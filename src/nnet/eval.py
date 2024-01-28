@@ -2,29 +2,11 @@ import json
 import numpy as np
 import torch
 import tqdm
-from src.config import DEVICE, OUTPUTS_DIR, MODEL
+from src.config import DEVICE, OUTPUTS_DIR, METRICS_FILE_PATH, MODEL
 from src.common.utils import format_bboxes
 from src.metrics.metrics import calculate_metrics
 from src.metrics.nms import nms
 from src.nnet.net import Net
-
-
-def load_model(net: Net, path: str) -> None:
-    """
-    Loads the model weights from a given file path.
-
-    Parameters:
-        net (Net): Neural network model.
-        path (str): Path to the model checkpoint file.
-
-    Returns:
-        None
-    """
-    if not torch.cuda.is_available():
-        checkpoint = torch.load(path, map_location=torch.device('cpu'))
-    else:
-        checkpoint = torch.load(path)
-    net.model.load_state_dict(checkpoint)
 
 
 def eval(net: Net) -> None:
@@ -37,7 +19,7 @@ def eval(net: Net) -> None:
     Returns:
         None
     """
-    load_model(net, f'{OUTPUTS_DIR}/{MODEL}')
+    net.load_model(net, f'{OUTPUTS_DIR}/{MODEL}')
 
     net.model.eval()
 
@@ -66,5 +48,5 @@ def eval(net: Net) -> None:
             fn += metrics['FN']
 
     # Save metrics to a JSON file
-    with open(f'{OUTPUTS_DIR}/metrics.json', 'w') as json_file:
+    with open(METRICS_FILE_PATH, 'w') as json_file:
         json.dump(all_metrics, json_file)

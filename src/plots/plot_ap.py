@@ -1,8 +1,7 @@
-import json
 import matplotlib.pyplot as plt
 import numpy as np
 from src.metrics.metrics import *
-
+from src.config import METRICS_FILE_PATH
 dir = "/Users/ziemian/Code/bt/paper"
 metrics_file = f"{dir}/values.txt"
 metrics_fig = "metrics_plot.png"
@@ -38,7 +37,6 @@ for iou in ious:
     for entry in metrics:
         print(entry) if entry['iou'] == iou else None
 
-import numpy as np
 
 p = [entry['precision'] for entry in metrics]
 r = sorted([entry['recall'] for entry in metrics])

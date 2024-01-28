@@ -13,8 +13,8 @@ if __name__ == "__main__":
     print("Creating data loaders...")
     net.create_data_loaders()
 
-    print("Training the model...")
-    train(net)
+    # print("Training the model...")
+    # train(net)
 
     print("Evaluating the model...")
     eval(net)

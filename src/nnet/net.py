@@ -86,3 +86,19 @@ class Net:
             num_workers=0,
             collate_fn=collate_fn
         )
+
+    def load_model(self, path: str) -> None:
+        """
+        Loads the model weights from a given file path.
+
+        Parameters:
+            path (str): Path to the model checkpoint file.
+
+        Returns:
+            None
+        """
+        if not torch.cuda.is_available():
+            checkpoint = torch.load(path, map_location=torch.device('cpu'))
+        else:
+            checkpoint = torch.load(path)
+        self.model.load_state_dict(checkpoint)

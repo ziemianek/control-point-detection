@@ -13,11 +13,10 @@ from src.config import (
     OUTPUTS_DIR,
     TEST_DIR,
     ANNOTATIONS_DIR_PATH,
+    MODEL,
+    IOU_THRESHOLD
 )
 
-
-MODEL = "model_12e.pth"
-IOU_T = 0.5
 
 def visualize_predictions(image, predictions, targets):
     if len(predictions) == 0:
@@ -70,7 +69,7 @@ if __name__ == "__main__":
   net.model.eval()
 
 
-  for i in range(len(test_images) // 4):
+  for i in range(len(test_images)):
 
     # get the image file name for saving output later on
     image_name = test_images[i].split('/')[-1].split('.')[0]
@@ -114,7 +113,7 @@ if __name__ == "__main__":
     image = torch.unsqueeze(image, 0)
 
     with torch.no_grad():
-        predictions = trainer.model(image)
+        predictions = net.model(image)
 
     print('------------')
     predictions = format_bboxes(predictions)
@@ -128,7 +127,7 @@ if __name__ == "__main__":
       annotated_boxes[j].insert(1, 1)
 
     print('number of ground truth boxes: ', len(annotated_boxes))
-    metrics = calculate_metrics(predictions, annotated_boxes, IOU_T)
+    metrics = calculate_metrics(predictions, annotated_boxes, IOU_THRESHOLD)
     print("stats per photo: ", metrics)
 
     visualize_predictions(orig_image, predictions, annotated_boxes)
