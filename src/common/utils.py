@@ -27,14 +27,15 @@ def get_train_transform() -> A.Compose:
     """
     return A.Compose(
         [
-            A.Flip(0.5),
-            A.RandomRotate90(0.5),
+            A.Flip(p=0.5),
+            A.RandomRotate90(p=0.5),
+            A.Blur(blur_limit=3, p=0.5),
             A.MotionBlur(p=0.5),
             A.MedianBlur(blur_limit=3, p=0.5),
-            A.Blur(blur_limit=3, p=0.5),
             A.ChannelShuffle(p=0.5),
+            A.ColorJitter(p=0.5),
             ToTensorV2(p=1.0),
-        ], 
+        ],
         bbox_params={
             'format': 'pascal_voc',
             'label_fields': ['labels']
@@ -114,6 +115,24 @@ def write_file(file_path: str, content: str) -> None:
     try:
         with open(file_path, 'w') as file:
             file.write(content)
+    except Exception:
+        print(f'Couldn\'t write to file {file_path}')
+
+
+def append_file(file_path: str, line: str) -> None:
+    """
+    Appends a line to a file.
+
+    Parameters:
+        file_path (str): Path to the file.
+        line (str): Line to be appended to the file.
+
+    Returns:
+        None
+    """
+    try:
+        with open(file_path, 'a') as file:
+            file.write(line)
     except Exception:
         print(f'Couldn\'t write to file {file_path}')
 
