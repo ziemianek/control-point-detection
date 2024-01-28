@@ -3,10 +3,11 @@ import numpy as np
 import torch
 import tqdm
 from src.config import DEVICE, OUTPUTS_DIR
-from src.common.utils import load_model, format_bboxes
+from src.common.utils import format_bboxes
 from src.metrics.metrics import calculate_metrics
 from src.metrics.nms import nms
 from src.nnet.net import Net
+
 
 def load_model(net: Net, path: str) -> None:
     """
@@ -24,6 +25,7 @@ def load_model(net: Net, path: str) -> None:
     else:
         checkpoint = torch.load(path)
     net.model.load_state_dict(checkpoint)
+
 
 def eval(net: Net) -> None:
     """
@@ -52,8 +54,9 @@ def eval(net: Net) -> None:
                 predictions = net.model(images)
 
             predictions = format_bboxes(predictions)
-            predictions = nms(predictions, 0.01)  # if one detection collides with another with at least 0.1 IOU, then remove it
             targets = format_bboxes(targets)
+            
+            predictions = nms(predictions, 0.01)  # if one detection collides with another with at least 0.1 IOU, then remove it
 
             metrics = calculate_metrics(predictions, targets, iou)
             all_metrics.append([iou, metrics])
@@ -63,5 +66,5 @@ def eval(net: Net) -> None:
             fn += metrics['FN']
 
     # Save metrics to a JSON file
-    with open('metrics.json', 'w') as json_file:
+    with open(f'{OUTPUTS_DIR}/metrics.json', 'w') as json_file:
         json.dump(all_metrics, json_file)
